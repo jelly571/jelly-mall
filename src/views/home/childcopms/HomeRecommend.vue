@@ -4,6 +4,7 @@
       <a :href="item.link">
         <img :src="item.image" alt="">
       </a>
+      <p>{{item.title}}</p>
     </div>
 </div>
 
@@ -25,13 +26,14 @@ export default {
   .recommend {
     display: flex;
     text-align: center;
-    width: 100%;
-
-  }
-  .recommend-item{
+    font-size: 12px;
+    padding: 10px 1px 15px;
+    border-bottom: 8px solid rgba(33, 91, 250, 0.1);
    
   }
+
   .recommend-item img {
     width: 80%;
+    margin-bottom: 10px;
   }
 </style>

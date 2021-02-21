@@ -4,12 +4,18 @@
     <nav-bar navColor="var(--color-tint)" class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+
     <!-- 轮播图 -->
     <home-swiper :banners='banners'></home-swiper>
     
     <!--推荐栏-->
     <home-recommend :recommends='recommends'></home-recommend>
 
+    <!--本期流行-->
+    <feature-view></feature-view>
+
+    <!--商品导航-->
+    <tab-control :titles="['流行', '新款', '精选']" class='tab-control'></tab-control>
     <ul>
       <li>列表1</li>
       <li>列表2</li>
@@ -117,9 +123,10 @@
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
+import TabControl from "components/content/tabcontrol/TabControl"
 import HomeSwiper from './childcopms/HomeSwiper'
 import HomeRecommend from './childcopms/HomeRecommend'
-
+import FeatureView from './childcopms/FeatureView'
 /* 网络请求*/
 import { getHomeMultidata } from "network/home";
 
@@ -128,7 +135,10 @@ export default {
   components: {
     NavBar,
     HomeSwiper,
-    HomeRecommend
+    HomeRecommend,
+    FeatureView,
+    TabControl
+
   },
   data() {
     return {
@@ -164,11 +174,18 @@ export default {
 }
 .home-nav {
   color: rgb(255, 255, 255);
+  font-weight:bold;
+  letter-spacing:2px;
   position: fixed;
   /*否则center宽度不撑满整个屏幕*/
   left: 0;
   right: 0;
   top: 0;
   z-index: 9;
+}
+
+.tab-control {
+  position: sticky;
+  top: 44px;
 }
 </style>
