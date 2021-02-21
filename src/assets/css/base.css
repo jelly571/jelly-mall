@@ -9,10 +9,10 @@ reset.css去除浏览器默认样式*/
 :root {
   --color-text: #666;
   --color-background: #fff;
-  --color-high-text: #ff5777;
-  --color-tint: #ff8189;/*背景颜色：导航等*/
+  --color-high-text: #466ff5;
+  --color-tint: #8aa5fc;/*背景颜色：导航等*/
   --font-size: 14px;
-  --line-height: 1.5; 
+  --line-height: 1.5;
 }
 
 /*去除默认样式，其实有了reset.css可以省去这一步*/
@@ -66,11 +66,3 @@ a {
   zoom: 1;
 }
 
-/*设置导航navbar浮动*/
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
