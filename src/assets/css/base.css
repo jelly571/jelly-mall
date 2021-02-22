@@ -9,7 +9,7 @@ reset.css去除浏览器默认样式*/
 :root {
   --color-text: #666;
   --color-background: #fff;
-  --color-high-text: #466ff5;
+  --color-high-text: #6f90fc;
   --color-tint: #8aa5fc;/*背景颜色：导航等*/
   --font-size: 14px;
   --line-height: 1.5;
