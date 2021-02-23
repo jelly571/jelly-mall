@@ -5,30 +5,33 @@
       <div slot="center">购物街</div>
     </nav-bar>
 
-    <!-- 轮播图 -->
-    <home-swiper :banners='banners'></home-swiper>
-    
-    <!--推荐栏-->
-    <home-recommend :recommends='recommends'></home-recommend>
+    <!-- 滚动 -->
+    <scroll class='content'>
+      <!-- 轮播图 -->
+      <home-swiper :banners='banners'></home-swiper>
+      
+      <!--推荐栏-->
+      <home-recommend :recommends='recommends'></home-recommend>
 
-    <!--本期流行-->
-    <feature-view></feature-view>
+      <!--本期流行-->
+      <feature-view></feature-view>
 
-    <!--商品导航-->
-    <tab-control 
-    :titles="['流行', '新款', '精选']" 
-    class='tab-control'
-    @tabClick='tabItemClick'>
-    </tab-control>
-    
-    <!--商品信息-->
-    <goods-list :goods='gooodsList'></goods-list>
-
+      <!--商品导航-->
+      <tab-control 
+      :titles="['流行', '新款', '精选']" 
+      class='tab-control'
+      @tabClick='tabItemClick'>
+      </tab-control>
+      
+      <!--商品信息-->
+      <goods-list :goods='gooodsList'></goods-list>
+      </scroll>
   </div>
 </template>
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
+import Scroll from "components/common/scroll/Scroll"
 import TabControl from "components/content/tabcontrol/TabControl"
 import GoodsList from "components/content/goods/GoodsList"
 
@@ -38,6 +41,7 @@ import FeatureView from './childcopms/FeatureView'
 /* 网络请求*/
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
+
 export default {
   name: "Home",
   components: {
@@ -46,7 +50,8 @@ export default {
     HomeRecommend,
     FeatureView,
     TabControl,
-    GoodsList
+    GoodsList,
+    Scroll
 
   },
   data() {
@@ -122,7 +127,9 @@ export default {
 
 <style scoped>
 #home {
-  margin-top: 44px;
+  /* margin-top: 44px; */
+  height: 100vh;
+  position: relative;
 }
 .home-nav {
   color: rgb(255, 255, 255);
@@ -140,5 +147,17 @@ export default {
   position: sticky;
   top: 44px;
   z-index: 9;
+}
+
+.content {
+  /* height: calc(100% - 93px); */
+  overflow: hidden;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 44px;
+  bottom: 49px;
+
+
 }
 </style>
