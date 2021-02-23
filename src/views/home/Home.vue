@@ -6,7 +6,9 @@
     </nav-bar>
 
     <!-- 滚动 -->
-    <scroll class='content'>
+    <scroll class='content' ref='scroll' 
+            :probe-type='3'
+            @scrollpos='contentScroll'>
       <!-- 轮播图 -->
       <home-swiper :banners='banners'></home-swiper>
       
@@ -26,6 +28,10 @@
       <!--商品信息-->
       <goods-list :goods='gooodsList'></goods-list>
       </scroll>
+      
+      <!-- 回到顶部 -->
+      <!-- 监听组件根元素的点击.native -->
+      <back-top @click.native='backtopClick' v-show='isShowBacktop'></back-top>
   </div>
 </template>
 
@@ -34,6 +40,7 @@ import NavBar from "components/common/navbar/NavBar";
 import Scroll from "components/common/scroll/Scroll"
 import TabControl from "components/content/tabcontrol/TabControl"
 import GoodsList from "components/content/goods/GoodsList"
+import BackTop from "components/content/backtop/BackTop"
 
 import HomeSwiper from './childcopms/HomeSwiper'
 import HomeRecommend from './childcopms/HomeRecommend'
@@ -51,7 +58,8 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
-    Scroll
+    Scroll,
+    BackTop
 
   },
   data() {
@@ -67,6 +75,7 @@ export default {
         sell: {page: 0, list: []},
       },
       currentType: 'pop',
+      isShowBacktop: false
 
     };
   },
@@ -120,8 +129,19 @@ export default {
           break;
       }
       
+    },
+    backtopClick() {
+      //500ms回到00顶部
+      //通过refs拿到ref为scroll的对象 调用里面的方法
+      this.$refs.scroll.scrollTo(0, 0, 500)
+    },
+    contentScroll(position) {
+      //1.判断BackTop是否显示
+      this.isShowBacktop = -position.y > 1000;
     }
+
   },
+  
 };
 </script>
 
@@ -157,7 +177,5 @@ export default {
   right: 0;
   top: 44px;
   bottom: 49px;
-
-
 }
 </style>
