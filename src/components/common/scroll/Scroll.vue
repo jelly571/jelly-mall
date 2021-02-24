@@ -21,7 +21,11 @@ export default {
     probeType: {
       type: Number,
       default: 0
-    }
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
+    },
   },
   mounted() {
     //1.创建BScroll对象
@@ -33,22 +37,47 @@ export default {
       //必须设置click: true，sacroll下的div才能点击
       click: true,
       /* probeType=0,不监听
-      probeType=1 滚动的时候会派发scroll事件，会截流。
-      probeType=2 滚动的时候实时派发scroll事件，不会截流。 
+      probeType=1 滚动时会派发scroll事件，会截流。
+      probeType=2 滚动时实时派发scroll事件，不会截流。 
       probeType=3 除了实时派发scroll事件，在swipe的情况下仍然能实时派发scroll事件*/
-      probeType: this.probeType
+      probeType: this.probeType,
+      pullUpLoad: this.pullUpLoad
     })
 
     //2.监听滚动的位置
     //监听滚动'scroll'
-      this.scroll.on('scroll', (position) => {
+    if(this.probeType === 2 || this.probeType === 3) {
+      this.scroll && this.scroll.on('scroll', (position) => {
         this.$emit('scrollpos', position)
       })
+    }
+
+    //3.监听下拉事件
+    if (this.pullUpLoad) {
+      this.scroll && this.scroll.on('pullingUp', () => {
+        this.$emit('pullingUp');
+
+      })
+    }
   },
   methods:{
     //回到顶部封装
     scrollTo(x, y, time) {
-     this.scroll.scrollTo(x, y, time)
+      this.scroll && this.scroll.scrollTo(x, y, time)
+    },
+    //完成监听下拉，否则只会监听一次
+    finishPullUp() {
+      this.scroll && this.scroll.finishPullUp();
+    },
+    //刷新,重新计算可滚动区域
+    refresh() {
+      //监听图片加载时scroll在created阶段可能未挂载，因为是在mounted阶段初始化的scroll
+      
+      this.scroll && this.scroll.refresh();
+    },
+
+    getScrollY() {
+     return this.scroll ? this.scroll.y : 0
     }
   }
 }

@@ -74,7 +74,7 @@ export default {
       //slidesELs：class为slide的元素 轮播中图在的那个div swiperItem
       let swiperEl = document.querySelector('.swiper');
      // let slidesEls = document.getElementsByClassName('slide');
-      let slidesEls = swiperEl.getElementsByClassName('slide');
+      let slidesEls = document.getElementsByClassName('slide');
       
       //2.保存图片数/圆点个数
       this.slideCount = slidesEls.length;

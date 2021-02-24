@@ -3,7 +3,8 @@
     <div v-for='(item, index) in goods' 
         :key='index' 
         class='goods-item'>
-      <img :src="item.show.img" alt="">
+      <!-- @load监听图片加载 -->
+      <img :src="item.show.img" alt="" @load='imgLoad'>
       <div class='goods-info'>
         <p>{{item.title}}</p>
         <span class='price'>{{item.price}}</span>
@@ -20,6 +21,15 @@ export default {
     goods: {
       type: Array,
       default: []
+    }
+  },
+  methods: {
+    imgLoad() {
+      //可以采用父子组件通信
+      //如果不是父子组件的话 
+      //可以通过vuex，在这里改变vuex中的一个属性，表示图片加载完成$store
+      //也可以通过事件总线$bus
+      this.$bus.$emit('itemImageLoad')
     }
   }
 }

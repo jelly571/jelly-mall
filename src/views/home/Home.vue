@@ -4,13 +4,25 @@
     <nav-bar navColor="var(--color-tint)" class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    
+    <!--商品导航-->
+    <tab-control 
+      :titles="['流行', '新款', '精选']" 
+      @tabClick='tabItemClick'
+      ref='tabControl1'
+      class='tabControl'
+      v-show='isTabFixed'>
+    </tab-control>
 
     <!-- 滚动 -->
     <scroll class='content' ref='scroll' 
             :probe-type='3'
-            @scrollpos='contentScroll'>
+            @scrollpos='contentScroll'
+            :pullUpLoad='true'
+            @pullingUp='loadMore'>
+
       <!-- 轮播图 -->
-      <home-swiper :banners='banners'></home-swiper>
+      <home-swiper :banners='banners' @swiperImageLoad='swiperImageLoad'></home-swiper>
       
       <!--推荐栏-->
       <home-recommend :recommends='recommends'></home-recommend>
@@ -21,8 +33,8 @@
       <!--商品导航-->
       <tab-control 
       :titles="['流行', '新款', '精选']" 
-      class='tab-control'
-      @tabClick='tabItemClick'>
+      @tabClick='tabItemClick'
+      ref='tabControl2'>
       </tab-control>
       
       <!--商品信息-->
@@ -41,6 +53,8 @@ import Scroll from "components/common/scroll/Scroll"
 import TabControl from "components/content/tabcontrol/TabControl"
 import GoodsList from "components/content/goods/GoodsList"
 import BackTop from "components/content/backtop/BackTop"
+
+import {debounce} from "common/utils"
 
 import HomeSwiper from './childcopms/HomeSwiper'
 import HomeRecommend from './childcopms/HomeRecommend'
@@ -75,7 +89,11 @@ export default {
         sell: {page: 0, list: []},
       },
       currentType: 'pop',
-      isShowBacktop: false
+      isShowBacktop: false,
+      tabOffsetTop: 0,
+      isTabFixed: false,
+      //切换路由时要保存当前位置
+      saveY: 0
 
     };
   },
@@ -93,7 +111,29 @@ export default {
     this.getHomeGoods('new');
     this.getHomeGoods('sell');
   },
+  mounted() {
+    //1.监听goodlist的item中图片加载完成
+    //防抖动操作debounce
+    const refresh = debounce(this.$refs.scroll.refresh, 50)
+    this.$bus.$on('itemImageLoad', () => {
+      //当每一张图片加载完成后，刷新，重新计算可滚动区域
+      //scroll在created阶段可能未挂载，$refs在created阶段也可能为空，因为组件还未挂载，因为是在mounted阶段初始化的scroll
+      //路由切换，需要增加this.$refs.scroll存在的判断
+      //或者使用keep-alive缓存，防止重新加载
+      //this.$refs.scroll && this.$refs.scroll.refresh();
+      refresh();
+    })
+  },
 
+  //切换路由时要保存当前位置
+  activated() {
+    //否则回来时会回到顶部
+    this.$refs.scroll.refresh();
+    this.$refs.scroll.scrollTo(0, this.saveY, 0)
+  },
+  deactivated() {
+    this.saveY = this.$refs.scroll.getScrollY();
+  },
   methods: {
     /* 网络请求相关函数 */
     getHomeMultidata() {
@@ -112,6 +152,7 @@ export default {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page += 1;
         //完成下拉加载更多
+        this.$refs.scroll.finishPullUp();
       })
     },
 
@@ -128,18 +169,44 @@ export default {
           this.currentType = 'sell';
           break;
       }
-      
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
+
+
     backtopClick() {
       //500ms回到00顶部
       //通过refs拿到ref为scroll的对象 调用里面的方法
       this.$refs.scroll.scrollTo(0, 0, 500)
     },
+
+    //监听scroll滚动
     contentScroll(position) {
       //1.判断BackTop是否显示
       this.isShowBacktop = -position.y > 1000;
-    }
+      
+      //2.决定tabcontrol是否吸顶
+      this.isTabFixed = -position.y > this.tabOffsetTop;
+    },
+    loadMore() {
+      this.getHomeGoods(this.currentType);
+      
+    },
+    //防抖
+    debounce(func, delay) {
+      let Timer = null
+    },
 
+    //监听轮播图图片加载完成
+    //tabcontrol的滚动到的位置
+    swiperImageLoad() {
+      //2.获取tabControl的offsetTop
+      //所有组件都有一个属性$el：用于获取组件中的元素
+      //offsetTop指obj距离上方或上层控件的位置，整型，单位像素
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop;
+    }
+    
+  
   },
   
 };
@@ -155,18 +222,26 @@ export default {
   color: rgb(255, 255, 255);
   font-weight:bold;
   letter-spacing:2px;
-  position: fixed;
-  /*否则center宽度不撑满整个屏幕*/
+  /* 在适应浏览器原生滚动时，为了让导航不跟随一起滚动，使用fixed,
+  使用better-scrool后不再需要*/
+  /* position: fixed;
+  //否则center宽度不撑满整个屏幕
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 }
 
-.tab-control {
+/* //使用better-scroll后无效了
+  .tab-control {
   position: sticky;
   top: 44px;
   z-index: 9;
+} */
+
+.tabControl {
+  position: relative;
+  z-index: 999;
 }
 
 .content {
