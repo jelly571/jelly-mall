@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <!-- 顶部导航栏 -->
-    <nav-bar navColor="var(--color-tint)" class="home-nav">
+    <nav-bar nav-color="var(--color-tint)" class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
     
@@ -18,7 +18,7 @@
     <scroll class='content' ref='scroll' 
             :probe-type='3'
             @scrollpos='contentScroll'
-            :pullUpLoad='true'
+            :pull-up-load='true'
             @pullingUp='loadMore'>
 
       <!-- 轮播图 -->
@@ -49,16 +49,15 @@
 
 <script>
 import NavBar from "components/common/navbar/NavBar";
-import Scroll from "components/common/scroll/Scroll"
-import TabControl from "components/content/tabcontrol/TabControl"
-import GoodsList from "components/content/goods/GoodsList"
-import BackTop from "components/content/backtop/BackTop"
+import Scroll from "components/common/scroll/Scroll";
+import TabControl from "components/content/tabcontrol/TabControl";
+import GoodsList from "components/content/goods/GoodsList";
+import BackTop from "components/content/backtop/BackTop";
 
-import {debounce} from "common/utils"
-
-import HomeSwiper from './childcopms/HomeSwiper'
-import HomeRecommend from './childcopms/HomeRecommend'
-import FeatureView from './childcopms/FeatureView'
+import {itemListenerMixin} from "common/mixin"
+import HomeSwiper from './childcomps/HomeSwiper';
+import HomeRecommend from './childcomps/HomeRecommend';
+import FeatureView from './childcomps/FeatureView';
 /* 网络请求*/
 import { getHomeMultidata, getHomeGoods } from "network/home";
 
@@ -93,7 +92,7 @@ export default {
       tabOffsetTop: 0,
       isTabFixed: false,
       //切换路由时要保存当前位置
-      saveY: 0
+      saveY: 0,
 
     };
   },
@@ -111,19 +110,9 @@ export default {
     this.getHomeGoods('new');
     this.getHomeGoods('sell');
   },
-  mounted() {
-    //1.监听goodlist的item中图片加载完成
+  //1.在mounted中监听goodlist的item中图片加载完成
     //防抖动操作debounce
-    const refresh = debounce(this.$refs.scroll.refresh, 50)
-    this.$bus.$on('itemImageLoad', () => {
-      //当每一张图片加载完成后，刷新，重新计算可滚动区域
-      //scroll在created阶段可能未挂载，$refs在created阶段也可能为空，因为组件还未挂载，因为是在mounted阶段初始化的scroll
-      //路由切换，需要增加this.$refs.scroll存在的判断
-      //或者使用keep-alive缓存，防止重新加载
-      //this.$refs.scroll && this.$refs.scroll.refresh();
-      refresh();
-    })
-  },
+  mixins: [itemListenerMixin],
 
   //切换路由时要保存当前位置
   activated() {
@@ -132,7 +121,10 @@ export default {
     this.$refs.scroll.scrollTo(0, this.saveY, 0)
   },
   deactivated() {
+    //保存y值
     this.saveY = this.$refs.scroll.getScrollY();
+    //取消全局事件监听
+    this.$bus.$off('itemImageLoad', this.itemImagListener)
   },
   methods: {
     /* 网络请求相关函数 */
@@ -220,7 +212,7 @@ export default {
 }
 .home-nav {
   color: rgb(255, 255, 255);
-  font-weight:bold;
+  font-weight: bold;
   letter-spacing:2px;
   /* 在适应浏览器原生滚动时，为了让导航不跟随一起滚动，使用fixed,
   使用better-scrool后不再需要*/

@@ -25,12 +25,13 @@ export default {
     height: 44px;
     line-height: 44px;
     /*水平居中*/
-    text-align: center;    
+    text-align: center;  
+    box-shadow: 0 1px 1px rgba(100,100,100,0.1);  
   }
   .left, .right {
     width: 60px;
   }
   .center {
-    flex: 1;
+    flex: 1;/* flex: 1; -> felx: 1 1 0% */ /*占据全部剩余空间*/
   }
 </style>

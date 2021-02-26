@@ -2,7 +2,7 @@
 /*normalize.css对浏览器默认样式进行统一
 reset.css去除浏览器默认样式*/
 @import "./normalize.css";
-@import "./reset.css";
+/* @import "./reset.css"; */
 
 /*配置一些变量，用于样式引用*/
 /*:root -> 伪类选择器：获取根元素html*/

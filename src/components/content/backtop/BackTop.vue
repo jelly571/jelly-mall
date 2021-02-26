@@ -15,13 +15,9 @@ export default {
   position: fixed;
   bottom: 56px;
   right: 8px;
-
-  
-
 }
 
 .backtop img {
   width: 30px;
-  
 }
 </style>

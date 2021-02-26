@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!-- 2.路由跳转页面 -->
-    <keep-alive>
+    <!-- exclude值为组件导出的name值 -->
+    <keep-alive exclude='Detail'>
       <router-view></router-view>
     </keep-alive>
     <!-- 1.底部标签栏 -->

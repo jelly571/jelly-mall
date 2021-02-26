@@ -28,7 +28,7 @@ export default {
     text-align: center;
     font-size: 12px;
     padding: 10px 1px 15px;
-    border-bottom: 8px solid rgba(33, 91, 250, 0.1);
+    border-bottom: 8px solid #f2f5f8;
    
   }
 
