@@ -4,7 +4,7 @@
         :key='index' 
         class='goods-item' @click='itemClick(item)'>
       <!-- @load监听图片加载 -->
-      <img :src="showImg(item)" alt="" @load='imgLoad'>
+      <img v-lazy="showImg(item)" alt="" @load='imgLoad'>
       <div class='goods-info'>
         <p>{{item.title}}</p>
         <span class='price'>{{item.price}}</span>
