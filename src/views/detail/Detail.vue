@@ -27,7 +27,7 @@
       <back-top @click.native='backtopClick' v-show='isShowBacktop'></back-top>
 
     <!-- 底部工具栏 -->
-    <detail-bottom-bar></detail-bottom-bar>
+    <detail-bottom-bar @addCart='addToCart'></detail-bottom-bar>
     
   </div>
 </template>
@@ -164,7 +164,23 @@ export default {
       //通过refs拿到ref为scroll的对象 调用里面的方法
       this.$refs.scroll.scrollTo(0, 0, 500)
     },
+    addToCart() {
+      //1.获取购物车中需要展示的信息
+      const product = {}
+      product.iid = this.iid;
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.realPrice;
+      
+      //2.将商品添加到购物车
+      this.$store.dispatch('addCart', product).then(res => {
+        this.$toast.show(res,1500)
+      })
 
+      //3.添加到购物车成功
+      
+    }
    
   }
 };
