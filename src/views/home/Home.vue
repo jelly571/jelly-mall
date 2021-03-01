@@ -178,7 +178,7 @@ export default {
       this.isShowBacktop = -position.y > 1000;
       
       //2.决定tabcontrol是否吸顶
-      this.isTabFixed = -position.y > this.tabOffsetTop;
+      this.isTabFixed = -position.y >= this.tabOffsetTop ;
     },
     loadMore() {
       this.getHomeGoods(this.currentType);

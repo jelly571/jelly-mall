@@ -7,7 +7,7 @@
       <img v-lazy="showImg(item)" alt="" @load='imgLoad'>
       <div class='goods-info'>
         <p>{{item.title}}</p>
-        <span class='price'>{{item.price}}</span>
+        <span class='price'>￥{{item.price}}</span>
         <span class='cfav'>{{item.cfav}}</span>
       </div>
     </div>

@@ -51,7 +51,7 @@ export default {
   border-bottom: 1px solid rgba(100, 100, 100, 0.1);
 }
 .param-key {
-  width: 80px;
+  width: 95px;
 }
 .info-param{
   border-top:1px solid rgba(0,0,0,0.1);
