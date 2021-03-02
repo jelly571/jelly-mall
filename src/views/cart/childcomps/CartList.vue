@@ -13,9 +13,9 @@
         <div class='price'>
           <span>￥ {{item.price}}</span>
           <div class='count'>
-            <button>+</button>
+            <button class='add' @click='addClick(item)'>+</button>
               <span>{{item.count}}</span>
-            <button>-</button>
+            <button class='sub' @click='subClick(item)'>-</button>
           </div>
           
         </div>
@@ -41,11 +41,21 @@ export default {
   },
   activated() {
     this.$refs.scroll.refresh();
-    console.log('...')
   },
   methods: {
     checkClick(item) {
       item.checked = ! item.checked
+    },
+    addClick(item) {
+      item.count += 1; 
+    },
+    subClick(item) {
+      if(item.count > 1) {
+        item.count -= 1; 
+      } else {
+        this.$toast.show('商品数量不能再减少啦',1500)
+      }
+      
     }
   }
 }
@@ -106,11 +116,13 @@ export default {
     margin: 0 5px;
     width: 20px;
     height: 20px;
+    line-height: 10px;
     color: var(--color-high-text);
     background-color: #fff;
     border: 1px solid #999;
     border-radius: 5px;
     text-align: center;
+    vertical-align: middle;
   }
 
    .count span {

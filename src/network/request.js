@@ -4,7 +4,7 @@ export function request(config) {
   //1.创建axios实例
   const instance = axios.create({
     /* 接口地址请加coderwhy老师微信*/
-    baseURL: 'http://152.136.185.210:7878/api/m5/',
+    baseURL: 'http://152.136.185.210:7878/api/m5',
     timeout: 5000
   })
 

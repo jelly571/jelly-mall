@@ -10,7 +10,7 @@
       <span>￥{{totalPrice}}</span>
     </div>
 
-    <div class="gocalc">结算({{checkLength}})</div>
+    <div class="gocalc" @click='calcClick'>结算({{checkLength}})</div>
   </div>
 </template>
 
@@ -54,6 +54,14 @@ export default {
           item.checked = true
         })
       }
+    },
+    calcClick() {
+      if(!this.cartList.find(item => item.checked)){
+        this.$toast.show('请选择要结算的商品',1500)
+      } else {
+        this.$toast.show('Sorry! 该功能还未开发~',1500)
+      }
+      
     }
   }
 }
